@@ -19,6 +19,15 @@ Vertex::Vertex(float x, float y, float z, float r, float g, float b, float u, fl
     m_st[0] = u; m_st[1] = v;
 }
 
+// Heightmap
+Vertex::Vertex(float x, float y, float z, float n1, float n2, float n3, float u, float v, float r, float g, float b)
+{
+    m_xyz[0] = x; m_xyz[1] = y; m_xyz[2] = z;
+    m_normal[0] = n1; m_normal[1] = n2; m_normal[2] = n3;
+    m_st[0] = u; m_st[1] = v;
+    m_RGB[0] = r; m_RGB[1] = g; m_RGB[2] = b;
+}
+
 std::ostream& operator<< (std::ostream& os, const Vertex& v) {
   os << std::fixed;
   os << "(" << v.m_xyz[0] << ", " << v.m_xyz[1] << ", " << v.m_xyz[2] << ") ";

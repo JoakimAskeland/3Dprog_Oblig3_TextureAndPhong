@@ -58,7 +58,7 @@ private:
     std::vector<VisualObject*> PlayerList;
     VisualObject* ObjectInHouse;        // Oblig2 Object inside house
 
-    VisualObject* heightmap;
+    VisualObject* sceneHeightmap;
 
     bool doorOpen = false;
 
@@ -167,7 +167,7 @@ private:
     ///Starts QOpenGLDebugLogger if possible
     void startOpenGLDebugger();
 
-    // Mo
+
     // Barysentric code
     bool bIsBottomTriangle;
     bool isItBottomTriangle(int posX, int posZ);

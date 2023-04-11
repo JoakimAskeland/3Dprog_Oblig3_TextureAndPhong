@@ -26,6 +26,7 @@
 #include "trophy.h"
 #include "door.h"
 //#include "lightsource.h"
+#include "heightmap.h"
 
 RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
     : mContext(nullptr), mInitialized(false), mMainWindow(mainWindow)
@@ -183,7 +184,7 @@ RenderWindow::RenderWindow(const QSurfaceFormat &format, MainWindow *mainWindow)
 
 
     // Kan være denne må være i init? evt mObjects.push_back
-    //heightmap = new loglheightmap("../3Dprog22/heightmap.bmp");
+    sceneHeightmap = new heightmap("../3Dprog22/heightmap.bmp");
     //mObjects.push_back(heightmap); // Yes or No?
 
 }
@@ -314,7 +315,7 @@ void RenderWindow::init()
     // Ingen feilkode, men vises ikkje...
     //heightmap = new loglheightmap("../3Dprog22/heightmap4.bmp");
     // Denne ligger i Ole Flatens kode
-    //heightmap->init(mMmatrixUniform);
+    sceneHeightmap->init(mMmatrixUniform); // mMmatrixUniform1  ?
 
 
     glBindVertexArray(0);       //unbinds any VertexArray - good practice
@@ -474,6 +475,9 @@ void RenderWindow::render()
         }
     }
 
+    // Test 11.04.23 @ 11:40
+    //sceneHeightmap->draw();
+
     //glUniformMatrix4fv(mAmbientStrength, 1, GL_TRUE, LightSourceObject->AmbientLightStrength);
 
 
@@ -624,111 +628,111 @@ void RenderWindow::startOpenGLDebugger()
 // Mo
 bool RenderWindow::isItBottomTriangle(int posX, int posZ)
 {
-//    if (px > 0.0f && py > 0.0f && pz > 0.0f)
-//    {
-        // To check if we need to calculate the top or bottom triangle on a quad
-        // QVector3D VertPos1 = *heightmap->GetSurfacePos(posX, posZ - 1);
-        // QVector3D VertPos2 = *heightmap->GetSurfacePos(posX + 1, posZ - 1 + 1);
-        // Now why the fuck does it have to be -1+1???? ^^
-        // VertPos1.setY(0.0f);
-        // VertPos2.setY(0.0f);
+    if (px > 0.0f && py > 0.0f && pz > 0.0f)
+    {
+         //To check if we need to calculate the top or bottom triangle on a quad
+         QVector3D VertPos1 = *sceneHeightmap->GetSurfacePos(posX, posZ - 1);
+         QVector3D VertPos2 = *sceneHeightmap->GetSurfacePos(posX + 1, posZ - 1 + 1);
+         //Now why the fuck does it have to be -1+1???? ^^
+         VertPos1.setY(0.0f);
+         VertPos2.setY(0.0f);
 
-        // QVector3D DiagonalVector = VertPos2 - VertPos1;
-        // QVector3D PlayerVector = QVector3D(px, 0, pz) - VertPos1;
+         QVector3D DiagonalVector = VertPos2 - VertPos1;
+         QVector3D PlayerVector = QVector3D(px, 0, pz) - VertPos1;
 
-//        PlayerVector.normalize(); // What does normalize do?
+        PlayerVector.normalize(); // What does normalize do?
 
-//        QVector3D Results = QVector3D::crossProduct(PlayerVector, DiagonalVector);
+        QVector3D Results = QVector3D::crossProduct(PlayerVector, DiagonalVector);
 
-//        if (Results.y() > 0)
-//        {
-//            bIsBottomTriangle = true;
-//            return true;
-//        }
-//        else
-//        {
-//            bIsBottomTriangle = false;
-//            return false;
-//        }
-//    }
+        if (Results.y() > 0)
+        {
+            bIsBottomTriangle = true;
+            return true;
+        }
+        else
+        {
+            bIsBottomTriangle = false;
+            return false;
+        }
+    }
     return false; // Removes a warning
 }
 
 // Mo
 float RenderWindow::barrysentricHeightOfPlayer()
 {
-//    // int casting
-//    int x = static_cast<int>(px);   // Removes floating points
-//    //int y = static_cast<int>(py);
-//    int z = static_cast<int>(pz);
-//    QVector3D VertPos1, VertPos2, VertPos3, Bary;
-//    isItBottomTriangle(x, z);
+    // int casting
+    int x = static_cast<int>(px);   // Removes floating points
+    //int y = static_cast<int>(py);
+    int z = static_cast<int>(pz);
+    QVector3D VertPos1, VertPos2, VertPos3, Bary;
+    isItBottomTriangle(x, z);
 
-//    if (px > 0.0f && pz > 0.0f)
-//    {
-//        // 1st triangle in quad
-//        if (bIsBottomTriangle)
-//        {
-//            // Get vertex pos of surface and turn it into 2D vector
-//            VertPos1 = *heightmap->GetSurfacePos(x, z - 1);
-//            VertPos2 = *heightmap->GetSurfacePos(x + 1, z - 1);
-//            VertPos3 = *heightmap->GetSurfacePos(x + 1, z);
-//            // Again, why -1 + 1???
+    if (px > 0.0f && pz > 0.0f)
+    {
+        // 1st triangle in quad
+        if (bIsBottomTriangle)
+        {
+            // Get vertex pos of surface and turn it into 2D vector
+            VertPos1 = *sceneHeightmap->GetSurfacePos(x, z - 1);
+            VertPos2 = *sceneHeightmap->GetSurfacePos(x + 1, z - 1);
+            VertPos3 = *sceneHeightmap->GetSurfacePos(x + 1, z);
+            // Again, why -1 + 1???
 
-//            // Calculate barycentric
-//            Bary = BarysentricCoordinates(VertPos1, VertPos2, VertPos3);
-//        }
+            // Calculate barycentric
+            Bary = BarysentricCoordinates(VertPos1, VertPos2, VertPos3);
+        }
 
-//        // 2nd
-//        else if (!bIsBottomTriangle)
-//        {
-//            VertPos1 = *heightmap->GetSurfacePos(x + 1, z - 1 + 1);
-//            VertPos2 = *heightmap->GetSurfacePos(x, z);
-//            VertPos3 = *heightmap->GetSurfacePos(x, z - 1);
-//            Bary = BarysentricCoordinates(VertPos1, VertPos2, VertPos3);
-//        }
-//        // Sum
-//        return VertPos1.y()*Bary.x() + VertPos2.y()*Bary.y() + VertPos3.y()*Bary.z();
-//    }
+        // 2nd
+        else if (!bIsBottomTriangle)
+        {
+            VertPos1 = *sceneHeightmap->GetSurfacePos(x + 1, z - 1 + 1);
+            VertPos2 = *sceneHeightmap->GetSurfacePos(x, z);
+            VertPos3 = *sceneHeightmap->GetSurfacePos(x, z - 1);
+            Bary = BarysentricCoordinates(VertPos1, VertPos2, VertPos3);
+        }
+        // Sum
+        return VertPos1.y()*Bary.x() + VertPos2.y()*Bary.y() + VertPos3.y()*Bary.z();
+    }
     return 0.0f; // Return to ground
 }
 
 // Mo/Joakim  vi tar begge fra kompendiumet i matte
 QVector3D RenderWindow::BarysentricCoordinates(QVector3D p1, QVector3D p2, QVector3D p3)
 {
-//    // Set height to zero
-//    p1.setY(0.0f);
-//    p2.setY(0.0f);
-//    p3.setY(0.0f);
+    // Set height to zero
+    p1.setY(0.0f);
+    p2.setY(0.0f);
+    p3.setY(0.0f);
 
-//    // Math3 compendium, page 83 (89 in pdf)
+    // Math3 compendium, page 83 (89 in pdf)
 
 
-//    QVector3D p12 = p2 - p1;
-//    QVector3D p13 = p3 - p1;
+    QVector3D p12 = p2 - p1;
+    QVector3D p13 = p3 - p1;
 
-//    QVector3D n = QVector3D::crossProduct(p12, p13);
-//    float area_123 = n.length();   // doubled area
+    QVector3D n = QVector3D::crossProduct(p12, p13);
+    float area_123 = n.length();   // doubled area
 
     QVector3D baryc;    // For return. Gets filled with u,v,w
 
-//    // u
-//    QVector3D p = p2 - QVector3D(px, 0.0f, pz);
-//    QVector3D q = p3 - QVector3D(px, 0.0, pz);
-//    n = QVector3D::crossProduct(p, q);
-//    baryc.setX(n.y()/area_123);
+    // u
+    QVector3D p = p2 - QVector3D(px, 0.0f, pz);
+    QVector3D q = p3 - QVector3D(px, 0.0, pz);
+    n = QVector3D::crossProduct(p, q);
+    baryc.setX(n.y()/area_123);
 
-//    // v
-//    p = p3 - QVector3D(px, 0.0f, pz);
-//    q = p1 - QVector3D(px, 0.0f, pz);
-//    n = QVector3D::crossProduct(p, q);
-//    baryc.setY(n.y()/area_123);
+    // v
+    p = p3 - QVector3D(px, 0.0f, pz);
+    q = p1 - QVector3D(px, 0.0f, pz);
+    n = QVector3D::crossProduct(p, q);
+    baryc.setY(n.y()/area_123);
 
-//    // w
-//    p = p1 - QVector3D(px, 0.0f, pz);
-//    q = p2 - QVector3D(px, 0.0f, pz);
-//    n = QVector3D::crossProduct(p, q);
-//    baryc.setZ(n.y()/area_123);
+    // w
+    p = p1 - QVector3D(px, 0.0f, pz);
+    q = p2 - QVector3D(px, 0.0f, pz);
+    n = QVector3D::crossProduct(p, q);
+    baryc.setZ(n.y()/area_123);
 
     return -baryc; // Mo bruker -baryc  teste først og se
 }

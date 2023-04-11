@@ -35,6 +35,26 @@ GLuint Texture::id() const
     return mId;
 }
 
+int Texture::columns() const
+{
+    return mColumns;
+}
+
+int Texture::rows() const
+{
+    return mRows;
+}
+
+int Texture::bytesPrPixel() const
+{
+    return mBytesPrPixel;
+}
+
+unsigned char *Texture::bitmap() const
+{
+    return mBitmap;
+}
+
 bool Texture::readBitmap(const std::string &filename)
 {
     OBITMAPFILEHEADER bmFileHeader;

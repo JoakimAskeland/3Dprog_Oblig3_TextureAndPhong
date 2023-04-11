@@ -48,3 +48,11 @@ void VisualObject::setRotation(float a, float x, float y, float z)
 {
     mMatrix.rotate(a, x, y, z);
 }
+
+QVector3D VisualObject::CalculateNormalVector(QVector3D v1, QVector3D v2)
+{
+    v1.normalize();
+    v2.normalize();
+
+    return QVector3D::crossProduct(v1, v2);
+}

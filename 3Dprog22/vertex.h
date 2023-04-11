@@ -15,10 +15,14 @@ private:
    float m_normal[3];    // normal in 3D or rgb colors
    float m_st[2];        	// texture coordinates if used
 
+   // heightmaps
+   float m_RGB[3];
+
 public:
    Vertex();
    Vertex(float x, float y, float z, float r, float g, float b);
    Vertex(float x, float y, float z, float r, float g, float b, float u, float v);
+   Vertex(float x, float y, float z, float n1, float n2, float n3, float u, float v, float r, float g, float b);
 };
 
 

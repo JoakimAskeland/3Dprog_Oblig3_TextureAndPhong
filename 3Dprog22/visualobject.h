@@ -44,11 +44,21 @@ public:
    QMatrix4x4 mMatrix;
    GLint mMatrixUniform{0};
 
+   // heightmaps
+   QVector3D CalculateNormalVector(QVector3D v1, QVector3D v2);
+   // Barycentric coordinates // Usikker på om eg bruke denne
+   QVector3D* GetSurfacePos(int ix, int iy){return SurfacePosArrxzy[ix][iy];}
+   // Trenger vi disse: setHeight, setIsDrawable, ?
+
 protected:
    std::vector<Vertex> mVertices;
    std::vector<GLuint> mIndices;
    QMatrix4x4 mPosition;
    QMatrix4x4 mRotation;
    QMatrix4x4 mScale;
+
+   // Barycentric coordinates
+   QVector3D *SurfacePosArrxzy[260][260];
+   QVector3D VertexNormals[260][260];
 };
 #endif // VISUALOBJECT_H

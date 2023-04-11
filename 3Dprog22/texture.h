@@ -16,6 +16,12 @@ public:
     ///Filename of the texture, with full path
     std::string textureFilename;
 
+    // Heightmap usage
+    int columns() const;
+    int rows() const;
+    int bytesPrPixel() const;
+    unsigned char *bitmap() const;
+
 private:
     GLubyte pixels[16];     // For the standard texture from the no-parameter constructor
     GLuint mId{0};          //Texture ID that OpenGL makes when glGenTextures is called
